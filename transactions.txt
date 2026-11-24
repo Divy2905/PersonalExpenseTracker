@@ -5,5 +5,3 @@ EXPENSE|5|3000.00|Shopping|Winter clothing|2026-11-12
 EXPENSE|6|2000.00|Education|C++ Programming Books|2026-11-15
 EXPENSE|7|800.00|Food|Snacks and Coffee|2026-11-20
 INCOME|8|1000.00|salary|mummy ee apya|2026-11-23
-INCOME|9|1000.00|vaparvana|bapa ee aypa |2026-11-15
-EXPENSE|10|500.00|egg rice tikhaaa |bov mast hata |2026-11-16
