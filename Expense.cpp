@@ -7,18 +7,15 @@
 
 using namespace std;
 
-// Unit-V: Constructors in Derived Classes (delegation to base class Transaction)
 Expense::Expense(int id, double amount, const string& category,
                  const string& description, const string& date)
     : Transaction(id, amount, category, description, date) {
 }
 
-// Unit-VI: Function Overriding
 string Expense::getType() const {
     return "Expense";
 }
 
-// Unit-II: Manipulators (setw, left, right, fixed, setprecision)
 void Expense::displayRow() const {
     cout << "| " << setw(6)  << left  << getId()
          << "| " << setw(9)  << left  << getType()
@@ -29,7 +26,6 @@ void Expense::displayRow() const {
          << "|\n";
 }
 
-// Serialization format for file storage
 string Expense::toFileString() const {
     ostringstream oss;
     oss << "EXPENSE|"

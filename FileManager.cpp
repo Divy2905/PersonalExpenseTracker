@@ -8,7 +8,6 @@
 
 using namespace std;
 
-// Saves all transactions from tracker into the file
 bool FileManager::saveToFile(const string& filename,
                              const ExpenseTracker& tracker) {
     ofstream outFile(filename, ios::out | ios::trunc);
@@ -21,7 +20,6 @@ bool FileManager::saveToFile(const string& filename,
     for (int i = 0; i < count; i++) {
         Transaction* item = tracker.getTransactionAt(i);
         if (item != nullptr) {
-            // Unit-VI: Polymorphic call to virtual function toFileString()
             outFile << item->toFileString() << "\n";
         }
     }
@@ -30,12 +28,10 @@ bool FileManager::saveToFile(const string& filename,
     return true;
 }
 
-// Loads transactions from the file and populates the ExpenseTracker
 bool FileManager::loadFromFile(const string& filename,
                                ExpenseTracker& tracker) {
     ifstream inFile(filename);
     if (!inFile.is_open()) {
-        // File does not exist yet (normal on fresh startup)
         return false;
     }
 
@@ -51,7 +47,6 @@ bool FileManager::loadFromFile(const string& filename,
         stringstream ss(line);
         string typeStr, idStr, amountStr, category, description, date;
 
-        // Parse fields delimited by '|'
         if (getline(ss, typeStr, '|') &&
             getline(ss, idStr, '|') &&
             getline(ss, amountStr, '|') &&
@@ -63,8 +58,6 @@ bool FileManager::loadFromFile(const string& filename,
                 int id = stoi(idStr);
                 double amount = stod(amountStr);
 
-                // Unit-II: Dynamic object creation with 'new'
-                // Unit-VI: Pointer to Derived Class passed to base-pointer method
                 if (typeStr == "INCOME") {
                     tracker.addTransaction(new Income(id, amount, category, description, date));
                     loadedCount++;

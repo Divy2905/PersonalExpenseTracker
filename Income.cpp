@@ -5,18 +5,15 @@
 
 using namespace std;
 
-// Unit-V: Constructors in Derived Classes (delegation to base class Transaction)
 Income::Income(int id, double amount, const string& category,
                const string& description, const string& date)
     : Transaction(id, amount, category, description, date) {
 }
 
-// Unit-VI: Function Overriding
 string Income::getType() const {
     return "Income";
 }
 
-// Unit-II: Manipulators (setw, left, right, fixed, setprecision)
 void Income::displayRow() const {
     cout << "| " << setw(6)  << left  << getId()
          << "| " << setw(9)  << left  << getType()
@@ -27,7 +24,6 @@ void Income::displayRow() const {
          << "|\n";
 }
 
-// Serialization format for file storage
 string Income::toFileString() const {
     ostringstream oss;
     oss << "INCOME|"

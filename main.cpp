@@ -9,38 +9,27 @@
 
 using namespace std;
 
-// Name of data file for persistence
 const string DATA_FILE = "transactions.txt";
 
-// ============================================================================
-// Helper Input Validation Functions
-//
-// These functions prevent the program from crashing or entering infinite loops
-// when users enter invalid input (such as typing letters instead of numbers).
-// Demonstrates Unit-II: Control Structures, Functions
-// ============================================================================
-
-// Reads a positive floating-point number (> 0.0)
 double getPositiveAmount(const string& prompt) {
     double amount = 0.0;
     while (true) {
         cout << prompt;
         if (cin >> amount) {
             if (amount > 0.0) {
-                cin.ignore(1000, '\n'); // clear remaining newline from buffer
+                cin.ignore(1000, '\n');
                 return amount;
             } else {
                 cout << "[Error] Amount must be greater than zero. Please try again.\n";
             }
         } else {
             cout << "[Error] Invalid input! Please enter a valid number.\n";
-            cin.clear();              // reset error state
-            cin.ignore(1000, '\n');  // flush invalid input
+            cin.clear();
+            cin.ignore(1000, '\n');
         }
     }
 }
 
-// Reads an integer within a given range [minVal, maxVal]
 int getIntInRange(const string& prompt, int minVal, int maxVal) {
     int value = 0;
     while (true) {
@@ -60,7 +49,6 @@ int getIntInRange(const string& prompt, int minVal, int maxVal) {
     }
 }
 
-// Reads any positive integer (> 0)
 int getPositiveInt(const string& prompt) {
     int value = 0;
     while (true) {
@@ -80,14 +68,12 @@ int getPositiveInt(const string& prompt) {
     }
 }
 
-// Reads a non-empty string and prevents the file delimiter '|' from being used
 string getNonEmptyString(const string& prompt) {
     string text;
     while (true) {
         cout << prompt;
         getline(cin, text);
 
-        // Check if string is empty or contains only spaces
         bool allSpaces = true;
         for (size_t i = 0; i < text.length(); i++) {
             if (text[i] != ' ' && text[i] != '\t') {
@@ -101,7 +87,6 @@ string getNonEmptyString(const string& prompt) {
             continue;
         }
 
-        // Check for delimiter '|'
         if (text.find('|') != string::npos) {
             cout << "[Error] The '|' symbol is reserved for file storage. Please do not use it.\n";
             continue;
@@ -111,12 +96,10 @@ string getNonEmptyString(const string& prompt) {
     }
 }
 
-// Validates date in standard YYYY-MM-DD format
 string getValidDate(const string& prompt) {
     while (true) {
         string date = getNonEmptyString(prompt);
 
-        // Check length and hyphen positions: YYYY-MM-DD
         if (date.length() == 10 && date[4] == '-' && date[7] == '-') {
             bool allDigits = true;
             for (int i = 0; i < 10; i++) {
@@ -142,7 +125,6 @@ string getValidDate(const string& prompt) {
     }
 }
 
-// Displays the main menu options
 void displayMainMenu() {
     cout << "\n========================================\n";
     cout << "       PERSONAL EXPENSE TRACKER         \n";
@@ -159,22 +141,15 @@ void displayMainMenu() {
     cout << "========================================\n";
 }
 
-// ============================================================================
-// Main Application Entry Point
-// ============================================================================
-
 int main() {
     cout << "========================================================\n";
     cout << " Welcome to the Personal Expense Tracker System (C++ OOP)\n";
     cout << "========================================================\n";
 
-    // Unit-III: Creating object of class ExpenseTracker
     ExpenseTracker tracker;
 
-    // Load existing records from file at startup
     cout << "[System] Initializing data storage...\n";
     if (FileManager::loadFromFile(DATA_FILE, tracker)) {
-        // Records were loaded successfully
     } else {
         cout << "[Info] No existing database found. Starting with a fresh tracker.\n";
     }
@@ -185,7 +160,7 @@ int main() {
         int choice = getIntInRange("Enter your choice (1-9): ", 1, 9);
 
         switch (choice) {
-            case 1: { // Feature 1: Add Income
+            case 1: {
                 cout << "\n--- ADD NEW INCOME ---\n";
                 double amount = getPositiveAmount("Enter income amount (INR): ");
                 string category = getNonEmptyString("Enter category (e.g., Salary, Freelance): ");
@@ -193,9 +168,6 @@ int main() {
                 string date = getValidDate("Enter date (YYYY-MM-DD): ");
 
                 int id = tracker.getNextId();
-
-                // Unit-II: Memory Management Operator 'new'
-                // Unit-VI: Pointer to Derived Class (Income) stored in base pointer (Transaction*)
                 Transaction* newIncome = new Income(id, amount, category, description, date);
                 if (tracker.addTransaction(newIncome)) {
                     FileManager::saveToFile(DATA_FILE, tracker);
@@ -204,7 +176,7 @@ int main() {
                 break;
             }
 
-            case 2: { // Feature 2: Add Expense
+            case 2: {
                 cout << "\n--- ADD NEW EXPENSE ---\n";
                 double amount = getPositiveAmount("Enter expense amount (INR): ");
                 string category = getNonEmptyString("Enter category (e.g., Food, Travel, Rent): ");
@@ -212,9 +184,6 @@ int main() {
                 string date = getValidDate("Enter date (YYYY-MM-DD): ");
 
                 int id = tracker.getNextId();
-
-                // Unit-II: Memory Management Operator 'new'
-                // Unit-VI: Pointer to Derived Class (Expense) stored in base pointer (Transaction*)
                 Transaction* newExpense = new Expense(id, amount, category, description, date);
                 if (tracker.addTransaction(newExpense)) {
                     FileManager::saveToFile(DATA_FILE, tracker);
@@ -223,14 +192,13 @@ int main() {
                 break;
             }
 
-            case 3: { // Feature 3: View All Transactions
+            case 3: {
                 tracker.viewAllTransactions();
-                // Unit-III: Calling static member function to display total count
                 cout << "Active Objects in Memory: " << Transaction::getTotalTransactionCount() << "\n";
                 break;
             }
 
-            case 4: { // Feature 4: Search Transactions
+            case 4: {
                 cout << "\n--- SEARCH TRANSACTIONS ---\n";
                 cout << " 1. Search by Transaction ID\n";
                 cout << " 2. Search by Category\n";
@@ -246,12 +214,12 @@ int main() {
                 break;
             }
 
-            case 5: { // Feature 5: View Account Balance
+            case 5: {
                 tracker.displayBalance();
                 break;
             }
 
-            case 6: { // Feature 6: Monthly Summary
+            case 6: {
                 cout << "\n--- MONTHLY SUMMARY ---\n";
                 int month = getIntInRange("Enter Month (1 - 12): ", 1, 12);
                 int year = getIntInRange("Enter Year (e.g., 2026): ", 1900, 2100);
@@ -259,12 +227,12 @@ int main() {
                 break;
             }
 
-            case 7: { // Feature 7: Category-wise Expenses
+            case 7: {
                 tracker.displayCategoryWiseExpenses();
                 break;
             }
 
-            case 8: { // Feature 8: Delete Transaction
+            case 8: {
                 cout << "\n--- DELETE TRANSACTION ---\n";
                 int deleteId = getPositiveInt("Enter Transaction ID to delete: ");
 
@@ -273,12 +241,10 @@ int main() {
                     break;
                 }
 
-                // Show details before deletion
                 tracker.searchById(deleteId);
 
                 string confirm = getNonEmptyString("Are you sure you want to delete this transaction? (y/n): ");
                 if (confirm == "y" || confirm == "Y") {
-                    // Unit-II: deleteTransaction calls 'delete' internally
                     if (tracker.deleteTransaction(deleteId)) {
                         FileManager::saveToFile(DATA_FILE, tracker);
                         cout << "[Success] Transaction #" << deleteId << " deleted successfully!\n";
@@ -291,7 +257,7 @@ int main() {
                 break;
             }
 
-            case 9: { // Feature 9: Exit
+            case 9: {
                 cout << "\n[System] Saving all data before exiting...\n";
                 FileManager::saveToFile(DATA_FILE, tracker);
                 cout << "========================================================\n";
@@ -307,7 +273,5 @@ int main() {
         }
     }
 
-    // Unit-IV: tracker destructor (~ExpenseTracker) automatically executes here,
-    // freeing all dynamically allocated Transaction objects with 'delete'.
     return 0;
 }

@@ -5,7 +5,6 @@
 
 using namespace std;
 
-// Helper function: Converts string to lowercase using basic character loop (Unit-II)
 static string toLowerString(const string& str) {
     string result = str;
     for (size_t i = 0; i < result.length(); i++) {
@@ -14,7 +13,6 @@ static string toLowerString(const string& str) {
     return result;
 }
 
-// Unit-IV: Default Constructor
 ExpenseTracker::ExpenseTracker() {
     transactionCount = 0;
     for (int i = 0; i < MAX_TRANSACTIONS; i++) {
@@ -22,31 +20,27 @@ ExpenseTracker::ExpenseTracker() {
     }
 }
 
-// Unit-IV & Unit-II: Destructor freeing heap-allocated objects with delete
 ExpenseTracker::~ExpenseTracker() {
     clear();
 }
 
-// Print formatted header for tabular display (Unit-II: Manipulators)
 void ExpenseTracker::printTableHeader() const {
     cout << "+-------+----------+---------------+----------------+---------------------------+--------------+\n";
     cout << "| ID    | Type     | Amount (INR)  | Category       | Description               | Date         |\n";
     cout << "+-------+----------+---------------+----------------+---------------------------+--------------+\n";
 }
 
-// Print formatted footer for tabular display
 void ExpenseTracker::printTableFooter() const {
     cout << "+-------+----------+---------------+----------------+---------------------------+--------------+\n";
 }
 
-// Adds a new transaction pointer (Unit-VI: Pointer to Derived Class stored in base pointer)
 bool ExpenseTracker::addTransaction(Transaction* transaction) {
     if (transaction == nullptr) {
         return false;
     }
     if (transactionCount >= MAX_TRANSACTIONS) {
         cout << "[Error] Storage full! Cannot add more transactions.\n";
-        delete transaction; // Free memory if storage is full
+        delete transaction;
         return false;
     }
 
@@ -55,7 +49,6 @@ bool ExpenseTracker::addTransaction(Transaction* transaction) {
     return true;
 }
 
-// Determines the next available unique ID
 int ExpenseTracker::getNextId() const {
     int maxId = 0;
     for (int i = 0; i < transactionCount; i++) {
@@ -66,7 +59,6 @@ int ExpenseTracker::getNextId() const {
     return maxId + 1;
 }
 
-// Checks if a transaction with the given ID exists
 bool ExpenseTracker::hasTransaction(int id) const {
     for (int i = 0; i < transactionCount; i++) {
         if (transactions[i]->getId() == id) {
@@ -76,7 +68,6 @@ bool ExpenseTracker::hasTransaction(int id) const {
     return false;
 }
 
-// Unit-II & Unit-III: Deletes transaction and shifts array elements
 bool ExpenseTracker::deleteTransaction(int id) {
     int foundIndex = -1;
     for (int i = 0; i < transactionCount; i++) {
@@ -90,10 +81,8 @@ bool ExpenseTracker::deleteTransaction(int id) {
         return false;
     }
 
-    // Unit-II: Memory Management Operator 'delete'
     delete transactions[foundIndex];
 
-    // Unit-III: Shift remaining array elements left to maintain contiguous order
     for (int i = foundIndex; i < transactionCount - 1; i++) {
         transactions[i] = transactions[i + 1];
     }
@@ -103,7 +92,6 @@ bool ExpenseTracker::deleteTransaction(int id) {
     return true;
 }
 
-// Unit-VI: Demonstrates Runtime Polymorphism using array of base class pointers
 void ExpenseTracker::viewAllTransactions() const {
     if (transactionCount == 0) {
         cout << "\n[Info] No transactions recorded yet.\n";
@@ -112,8 +100,6 @@ void ExpenseTracker::viewAllTransactions() const {
 
     cout << "\n================================ TRANSACTION HISTORY ================================\n";
     printTableHeader();
-    // Polymorphic Call: At runtime, transactions[i]->displayRow() dynamically
-    // calls either Income::displayRow() or Expense::displayRow() via the vtable
     for (int i = 0; i < transactionCount; i++) {
         transactions[i]->displayRow();
     }
@@ -121,7 +107,6 @@ void ExpenseTracker::viewAllTransactions() const {
     cout << "Total Transactions: " << transactionCount << "\n";
 }
 
-// Searches for a transaction by ID
 void ExpenseTracker::searchById(int id) const {
     bool found = false;
     for (int i = 0; i < transactionCount; i++) {
@@ -142,7 +127,6 @@ void ExpenseTracker::searchById(int id) const {
     }
 }
 
-// Searches transactions matching a category
 void ExpenseTracker::searchByCategory(const string& category) const {
     string target = toLowerString(category);
     bool found = false;
@@ -166,13 +150,11 @@ void ExpenseTracker::searchByCategory(const string& category) const {
     }
 }
 
-// Calculates and displays total income, total expenses, and balance
 void ExpenseTracker::displayBalance() const {
     double totalIncome = 0.0;
     double totalExpense = 0.0;
 
     for (int i = 0; i < transactionCount; i++) {
-        // Unit-VI: Runtime Polymorphic call to virtual getType()
         if (transactions[i]->getType() == "Income") {
             totalIncome += transactions[i]->getAmount();
         } else if (transactions[i]->getType() == "Expense") {
@@ -194,7 +176,6 @@ void ExpenseTracker::displayBalance() const {
     cout << "=========================================================\n";
 }
 
-// Generates a summary for a specific month and year
 void ExpenseTracker::displayMonthlySummary(int month, int year) const {
     double monthlyIncome = 0.0;
     double monthlyExpense = 0.0;
@@ -216,7 +197,6 @@ void ExpenseTracker::displayMonthlySummary(int month, int year) const {
                     }
                 }
             } catch (...) {
-                // Ignore parsing errors for malformed dates
             }
         }
     }
@@ -239,20 +219,17 @@ void ExpenseTracker::displayMonthlySummary(int month, int year) const {
     cout << "=========================================================\n";
 }
 
-// Unit-III: Aggregates category spending using standard arrays without any STL containers
 void ExpenseTracker::displayCategoryWiseExpenses() const {
     string categories[MAX_TRANSACTIONS];
     double totals[MAX_TRANSACTIONS];
     int categoryCount = 0;
     double grandExpenseTotal = 0.0;
 
-    // Aggregate expenses using basic array lookup
     for (int i = 0; i < transactionCount; i++) {
         if (transactions[i]->getType() == "Expense") {
             string cat = transactions[i]->getCategory();
             double amt = transactions[i]->getAmount();
 
-            // Check if category is already recorded
             int foundIndex = -1;
             for (int j = 0; j < categoryCount; j++) {
                 if (categories[j] == cat) {
@@ -298,7 +275,6 @@ void ExpenseTracker::displayCategoryWiseExpenses() const {
     cout << "+----------------------+---------------+------------+\n";
 }
 
-// Returns a pointer to the transaction at given index
 Transaction* ExpenseTracker::getTransactionAt(int index) const {
     if (index >= 0 && index < transactionCount) {
         return transactions[index];
@@ -306,12 +282,10 @@ Transaction* ExpenseTracker::getTransactionAt(int index) const {
     return nullptr;
 }
 
-// Returns current count of transactions
 int ExpenseTracker::getTransactionCount() const {
     return transactionCount;
 }
 
-// Unit-II & IV: Clears all transactions and frees memory using 'delete'
 void ExpenseTracker::clear() {
     for (int i = 0; i < transactionCount; i++) {
         if (transactions[i] != nullptr) {
