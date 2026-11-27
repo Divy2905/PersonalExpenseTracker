@@ -69,3 +69,10 @@ cd "c:\Users\admin\Desktop\OOP\PersonalExpenseTracker"
 g++ -std=c++17 -Wall -Wextra main.cpp Transaction.cpp Income.cpp Expense.cpp ExpenseTracker.cpp FileManager.cpp -o ExpenseTracker.exe
 .\ExpenseTracker.exe
 ```
+
+
+---
+
+## 5. Authors & Contributors
+- **Divy Vekariya** (Roll No: 26BAM506)
+- **Anand Kalariya** (Roll No: 26BAM501)

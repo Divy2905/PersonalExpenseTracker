@@ -6,10 +6,11 @@
 ### B. Tech. Semester III
 
 **Report Prepared By:**  
-Divy Vekariya (Roll / Registration: `Divy2905`)
+- **Divy Vekariya** (Roll No: 26BAM506)  
+- **Anand Kalariya** (Roll No: 26BAM501)  
 
 **Report Submitted To:**  
-Prof. (Course Instructor)
+Prof. Ankit Patel
 
 ---
 
